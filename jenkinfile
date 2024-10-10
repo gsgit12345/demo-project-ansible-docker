@@ -2,8 +2,12 @@ pipeline{
 
     agent any
     tools {
-  maven 'MAVEN_HOME'
+      maven 'MAVEN_HOME'
         }
+environment {
+  DOCKER_TAG = "getCommitVersionInshort()"
+}
+
    stages{
 
         stage("clone the project")
@@ -26,10 +30,27 @@ pipeline{
             steps
             {
                sh  "echo building the docker image"
-               sh "docker build . -t gshukla123/docker-ansible-img"
+               sh "docker build . -t gshukla123/docker-ansible-img:0.0.2"
+            }
+        }
+    stage("push the docker image")
+        {
+            steps
+            {
+               sh  " echo pushing the   the docker image"
+               withCredentials([string(credentialsId: 'docker-pass', variable: 'dockerhubpwd')]) {
+                sh "docker login -u gshukla123 -p ${dockerhubpwd}"
+
+                }
+               sh "docker push  gshukla123/docker-ansible-img:0.0.2"
             }
         }
 
     }
 
+}
+
+def getCommitVersionInshort(){
+   def commitid= sh returnStdout: true, script: 'git rev-parse --short HEAD'
+   return commitid
 }
