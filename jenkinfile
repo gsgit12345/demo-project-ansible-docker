@@ -1,0 +1,35 @@
+pipeline{
+
+    agent any
+    tools {
+  maven 'MAVEN_HOME'
+        }
+   stages{
+
+        stage("clone the project")
+        {
+            steps
+            {
+               git branch: 'release/0.1', url: 'https://github.com/gsgit12345/demo-project-ansible-docker'
+            }
+        }
+        stage("build the project")
+        {
+            steps
+            {
+               sh  "echo building the project"
+               sh "mvn clean package"
+            }
+        }
+        stage("build the docker image")
+        {
+            steps
+            {
+               sh  "echo building the docker image"
+               sh "docker build . -t gshukla123/docker-ansible-img"
+            }
+        }
+
+    }
+
+}
