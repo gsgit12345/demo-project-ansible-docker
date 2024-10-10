@@ -1,8 +1,10 @@
----
-- hosts: webservers
+-
+  name: containe image
+  hosts: webservers
   become: True
   tasks:
-    - name: Start the container
+    -
+      name: Start the container
       docker_container:
         name: hariapp
         image: "gshukla123/docker-ansible-img:{{DOCKER_TAG}}"
