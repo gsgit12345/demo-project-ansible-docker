@@ -1,4 +1,16 @@
 -
+  name:  executing multiple command on webserver
+  hosts: webservers
+  become: true
+  tasks:
+    -
+      name: creating file in temp directory
+      docker_login:
+        username: "gshukla123"
+        password: "gshukla123"
+
+
+-
   name: containe image
   hosts: webservers
   become: True
@@ -10,4 +22,5 @@
         image: "gshukla123/docker-ansible-img:{{DOCKER_TAG}}"
         state: started
         published_ports:
-          - 0.0.0.0:8080:8080
+          - 0.0.0.0:8082:8082
+
