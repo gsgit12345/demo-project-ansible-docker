@@ -8,7 +8,9 @@
       docker_login:
         username: "gshukla123"
         password: "gshukla123"
-
+-   name: Install plugin
+    community.general.jenkins_plugin:
+      name: build-pipeline-plugin
 
 -
   name: containe image
