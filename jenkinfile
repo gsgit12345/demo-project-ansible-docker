@@ -5,7 +5,7 @@ pipeline{
       maven 'MAVEN_HOME'
         }
 environment {
-  DOCKER_TAG = "getCommitVersionInshort()"
+  DOCKER_TAG = getCommitVersionInshort()
 }
 
    stages{
@@ -30,7 +30,7 @@ environment {
             steps
             {
                sh  "echo building the docker image"
-               sh "docker build . -t gshukla123/docker-ansible-img:0.0.2"
+               sh "docker build . -t gshukla123/docker-ansible-img:${DOCKER_TAG}"
             }
         }
     stage("push the docker image")
@@ -42,9 +42,18 @@ environment {
                 sh "docker login -u gshukla123 -p ${dockerhubpwd}"
 
                 }
-               sh "docker push  gshukla123/docker-ansible-img:0.0.2"
+               sh "docker push  gshukla123/docker-ansible-img:${DOCKER_TAG}"
             }
         }
+        stage("deploy the docker image")
+        {
+            steps
+            {
+               sh  " echo deploying the   the docker image"
+              ansiblePlaybook credentialsId: 'centos9cre', disableHostKeyChecking: true, extras: "-e DOCKER_TAG=${DOCKER_TAG}", installation: 'ansiblepath', inventory: 'dev.inv', playbook: 'docker-deploy-ansible.yaml', vaultTmpPath: ''
+            }
+        }
+
 
     }
 
